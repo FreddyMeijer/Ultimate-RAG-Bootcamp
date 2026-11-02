@@ -23,7 +23,7 @@ Het uiteindelijke doel is het bouwen van een lokale RAG-assistent (Retrieval-Aug
 De installatie is uitgevoerd op de volgende laptop:
 
 | Onderdeel | Specificatie |
-|---|---|
+| --- | --- |
 | Laptop | Lenovo Legion 5 17ITH6H |
 | Processor | Intel Core i7-11800H |
 | Werkgeheugen | 16 GB RAM |
@@ -37,7 +37,7 @@ Deze hardware is geschikt om met kleinere lokale AI-modellen te experimenteren.
 ## 3. Overzicht van de gebruikte software
 
 | Software | Functie |
-|---|---|
+| --- | --- |
 | Ollama | Lokaal uitvoeren en beheren van AI-modellen |
 | Qwen 2.5 3B | Taalmodel voor het genereren van antwoorden |
 | Nomic Embed Text | Embeddingmodel voor semantisch zoeken |
@@ -120,7 +120,6 @@ verantwoordelijk zijn voor zorg dat alle projecten in hun beperde termijn
 en budget gereed zijn en uitgevoerd worden. Dit zorgt ervoor dat het 
 leefondsen effectief in de toekomst blijft functioneren en de bestaande funderingen effectief gebruikt.
 ```
-
 
 ### Model afsluiten
 
