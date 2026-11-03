@@ -18,6 +18,7 @@ Maar wat is nu het verschil tussen Prompt-engineering, fine-tuning en RAG?
 ## Prompt Engineering, Fine tuning en RAG
 De drie termen zijn manieren om een model te 'trainen' of te gebruiken. Wanneer je welke gebruikt hangt af van de vraag. In sommige gevallen is het handig om prompt-engineering toe te passen terwijl andere vraagstukken om fine tuning of RAG vragen. Hieronder volgen de pro's en con's van iedere vorm. 
 
+
 ### Prompt engineering
 
 Prompt engineering wordt gebruikt wanneer je een snel prototype wilt ontwikkelen of als je een algemene niet specifieke vraag hebt. Je geeft een persoon mee (bijvoorbeeld _act as a chef_) vervolgens stel je jouw vraag (bijvoorbeeld _give me a recipe_) en je krijgt een antwoord uit de trainingsdata van het model. Dit betekent:
@@ -25,6 +26,12 @@ Prompt engineering wordt gebruikt wanneer je een snel prototype wilt ontwikkelen
 * Specifieke instructies
 * Duidelijke structuren en context meegeven
 * Het model en haar data veranderen dus niet
+
+```mermaid
+flowchart TD
+    A[Gebruiker] --> B[Base LLM]
+    B --> C[Output]
+```
 
 |Pro's|Con's|
 |-----|-----|
@@ -40,6 +47,13 @@ Fine tuning wordt gebruikt wanneer je een specifiek antwoord wilt genereren en m
 * De domeinspecifieke data moet verzameld en voorbereid worden
 * Het model moet getraind worden
 * De training moet leiden tot een gespecialiseerde LLM die bijgehouden moet worden
+
+```mermaid
+flowchart TD
+    A[Base LLM] --> C[Fine tuned LLM]
+    B[Trainingsdata] --> C[Fine tuned LLM]
+    C[Fine tuned LLM] --> D[Output]
+```
 
 |Pro's|Con's|
 |-----|-----|
