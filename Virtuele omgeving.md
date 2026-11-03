@@ -1,4 +1,8 @@
-# Kennisitem: Anaconda omgevingen beheren
+# Anaconda omgevingen beheren
+
+![Linux](https://img.shields.io/badge/Ubuntu-26.04.1-orange)
+![Conda](https://img.shields.io/badge/Conda-25.11-green)
+![Python](https://img.shields.io/badge/Python-3.11-blue)
 
 ## 1. Doel
 
