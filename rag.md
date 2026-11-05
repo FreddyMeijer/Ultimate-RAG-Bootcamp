@@ -68,7 +68,17 @@ RAG hangt een beetje tussen prompt engineering en fine tuning in. We nemen een b
 * Documenten opslaan in een vector database
 * Een mogelijkheid hebben om die database met queries te bevragen
 
-Daarnaast zorgt deze methode ervoor dat het antwoord dat gegeven wordt altijd de juiste context heeft.
+```mermaid
+flowchart TD
+    A[Gebruiker] --> C[Base LLM]
+    B[Vector database] <.-> C[Base LLM]
+    E[PDF] --> B[Vector database]
+    F[CSV] --> B[Vector database]
+    G[websites] --> B[Vector database]
+    C --> D[Output]
+```
+
+De vector database zorgt voor een context die de basis LLM gebruikt om zijn output te genereren.
 
 |Pro's|Con's|
 |-----|-----|
@@ -77,3 +87,29 @@ Daarnaast zorgt deze methode ervoor dat het antwoord dat gegeven wordt altijd de
 |Kosten/baten zijn goed|Je loopt kans dat je uit de context window loopt|
 |Hoge betrouwbaarheid|
 |Je kan gevoelige informatie ontsluiten omdat het in een 'eigen' vector database staat|
+
+## Core components of RAG
+
+1. Document Ingestion Phase
+2. Query Processing Phase
+3. Generation Phase
+
+### Document Ingestion and preprocessing
+Chunks vanwege context size
+Embedding model 0.16, 0.15 etc (zoals Huggingface en OpenAI) 
+Als het in de vector database staat kan je simularity search, Euclidic search en Cosine search doen.
+
+Bekende vector database zijn Pinecone, Chromadb, FAISS en datastore.
+
+```mermaid
+flowchart TD
+    A[Data pdf word websites] --> B[Chunk 1]
+    A[Data pdf word websites] --> C[Chunk 2]
+    A[Data pdf word websites] --> D[Chunk 3]
+    B[Chunk 1] --> E[Embedding model 1]
+    C[Chunk 2] --> F[Embedding model 2]
+    D[Chunk 3] --> G[Embedding model 3]
+    E[Embedding model 1] --> H[Vector database]
+    F[Embedding model 2] --> H[Vector database]
+    G[Embedding model 3] --> H[Vector database]
+```
