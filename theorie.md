@@ -3,6 +3,7 @@
 RAG staat voor Retrieval Augmentation Generation. Heel kort door de bocht kan je stellen dat je met RAG een LLM toegang geeft tot een 'nieuwe' database waaruit hij informatie kan halen, los van zijn trainingsdata.
 
 ## Hoe werkt dat?
+
 Stel: Je gaat naar India. Je stapt een restaurant binnen en  je vraagt daar om een bord hutspot. Er kunnen een aantal dingen gebeuren:
 
 1. Je krijgt het antwoord dat de chef dat niet kan of weet
@@ -16,8 +17,8 @@ Let wel: Het receptenboek is nu geen deel geworden van de trainingsdata. Na gebr
 Maar wat is nu het verschil tussen Prompt-engineering, fine-tuning en RAG?
 
 ## Prompt Engineering, Fine tuning en RAG
-De drie termen zijn manieren om een model te 'trainen' of te gebruiken. Wanneer je welke gebruikt hangt af van de vraag. In sommige gevallen is het handig om prompt-engineering toe te passen terwijl andere vraagstukken om fine tuning of RAG vragen. Hieronder volgen de pro's en con's van iedere vorm. 
 
+De drie termen zijn manieren om een model te 'trainen' of te gebruiken. Wanneer je welke gebruikt hangt af van de vraag. In sommige gevallen is het handig om prompt-engineering toe te passen terwijl andere vraagstukken om fine tuning of RAG vragen. Hieronder volgen de pro's en con's van iedere vorm.
 
 ### Prompt engineering
 
@@ -63,6 +64,7 @@ flowchart TD
 |Het werkt goed voor specifieke domeinen (en domeinkennis)||
 
 ### RAG
+
 RAG hangt een beetje tussen prompt engineering en fine tuning in. We nemen een basis LLM, maar die laten we communiceren met een vector database met daarin onze belangrijke documenten. We verrijken de trainingsdata niet, we laten de LLM via API's of vector databases kijken in andere bronnen (anders dan zijn eigen trainingsdata). Hiervoor moet je dus:
 
 * Documenten opslaan in een vector database
@@ -85,8 +87,8 @@ De vector database zorgt voor een context die de basis LLM gebruikt om zijn outp
 |De data is altijd up to date|De infrastructuur (vector databases) moet goed opgezet worden|
 |Geen training noodzakelijk|De kwaliteit van de data in de database bepaalt direct de kwaliteit van de output|
 |Kosten/baten zijn goed|Je loopt kans dat je uit de context window loopt|
-|Hoge betrouwbaarheid|
-|Je kan gevoelige informatie ontsluiten omdat het in een 'eigen' vector database staat|
+|Hoge betrouwbaarheid||
+|Je kan gevoelige informatie ontsluiten omdat het in een 'eigen' vector database staat||
 
 ## Core components of RAG
 
@@ -95,11 +97,60 @@ De vector database zorgt voor een context die de basis LLM gebruikt om zijn outp
 3. Generation Phase
 
 ### Document Ingestion and preprocessing
-Chunks vanwege context size
-Embedding model 0.16, 0.15 etc (zoals Huggingface en OpenAI) 
-Als het in de vector database staat kan je simularity search, Euclidic search en Cosine search doen.
 
-Bekende vector database zijn Pinecone, Chromadb, FAISS en datastore.
+Voordat we de data in een vector database kunnen opnemen, moeten we de data klaar maken. Dat betekent eerst opknippen en dan omzetten naar `chuncks`. We verdiepen ons eerst iets meer in embeddingmodellen en daarna in chuncks. Dit is handiger omdat we dan beter met voorbeelden kunnen werken.
+
+#### Embeddingmodelen
+
+Het omzetten van data naar vectoren (die opgeslagen kunnen worden in een vector database) gaat niet zozeer om opslag, maar om context. We gaan proberen om informatie terug te vinden op basis van betekenis in plaats van zoekwoorden. Zoeken op woorden is namelijk niet hetzelfde als zoeken op betekenis. Een voorbeeld:
+
+We hebben een pdf waar het volgende instaat:
+
+> _Een inwoner kan bij de gemeente een vergunning aanvragen om in een betaald parkeergebied te parkeren._
+
+De gebruiker vraagt aan het LLM:
+
+> _Hoe kan ik mijn auto in mijn wijk parkeren zonder steeds te betalen?_
+
+Een traditionele zoekmachine zoekt naar termen die uit de vraag komen, maar met onze pdf in het achterhoofd zien we de volgende verschillen:
+
+|PDF|Gebruikersvraag|
+|----|----|
+|Vergunning aanvragen|Hoe kan ik parkeren?|
+|Betaald parkeergebied|Zonder steeds te betalen|
+|Inwoner|Mijn wijk|
+
+Voor ons mensen is het duidelijk dat zowel de pdf als de gebruikersvraag 'bij elkaar horen'. Dit is voor een computer lastiger. De computer begrijpt de overeenkomsten niet automatisch. De oplossing hiervoor zijn embeddings.
+
+#### Vectorruimte
+
+Een embeddingmodel is een model dat tekst omzet naar een reeks getallen. Bijvoorbeeld:
+
+|Tekst|Nummerieke weergave|
+|-----|-----|
+|Hoe kan ik mijn auto in mijn wijk parkeren zonder steeds te betalen?|`[0.21, 0.83, -0.14, 0.55, 0.92, ...]`|
+|Een inwoner kan bij de gemeente een vergunning aanvragen om in een betaald parkeergebied te parkeren.|`[0.19, 0.79, -0.11, 0.51, 0.89, ...]`|
+
+Het embeddingmodel probeert de betekenis van tekst vast te leggen in een nummerieke representatie van de term. Teksten met een vergelijkbare betekenissen krijgen vaak vectors die dicht bij elkaar liggen in de vectorruimte. Dit heet semantische overeenkomst.
+
+Iedere tekst heeft in de vectorruimte zijn eigen plek. Vergelijkbare teksten liggen dicht bij elkaar. Dus: Onze pfd over parkeervergunningen liggen dicht bij documenten over parkeren, maar heel ver weg van documenten over kattenoverlast. Hoe meer de betekenis van twee teksten overeenkomen, hoe dichter hun vectors doorgaans bij elkaar liggen.
+
+#### Chunks
+
+Nu we weten dat we termen proberen te vatten in een vector (diens nummerieke representatie), weet je vermoedelijk ook dat een bestand van 100 pagina's omzetten in een vector geen slim idee is. Je kan de tekst beter opknippen in meerdere brokken (`chuncks`). Dus als we het beleidsstuk _parkeervergunningen_ nemen van een gemeente, zou het zo maar kunnen zijn dat dit stuk als volgt opgeknipt wordt:
+
+|Chunk|Inhoud|
+|----|----|
+|1|Aanvragen parkeervergunning|
+|2|Kosten parkeervergunning|
+|3|Verlengen parkeervergunning|
+|4|Bezwaar maken tegen afwijzing|
+
+Iedere chunk krijgt zijn eigen embedding. Hierdoor kkunnen we veel gerichter zoeken. Als iemand vraagt naar de kosten van een parkeervergunning, kunnen we specifiek de chunk over de kosten terugvinden. Het zoeken op betekenis heet semantisch zoeken.
+
+#### Flowchart
+
+Als we bovenstaande samen zouden vatten in een flowchart, ziet deze er als volgt uit:
 
 ```mermaid
 flowchart TD
