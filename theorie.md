@@ -29,7 +29,7 @@ Prompt engineering wordt gebruikt wanneer je een snel prototype wilt ontwikkelen
 * Het model en haar data veranderen dus niet
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Gebruiker] --> B[Base LLM]
     B --> C[Output]
 ```
@@ -50,7 +50,7 @@ Fine tuning wordt gebruikt wanneer je een specifiek antwoord wilt genereren en m
 * De training moet leiden tot een gespecialiseerde LLM die bijgehouden moet worden
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Base LLM] --> C[Fine tuned LLM]
     B[Trainingsdata] --> C[Fine tuned LLM]
     C[Fine tuned LLM] --> D[Output]
@@ -71,7 +71,7 @@ RAG hangt een beetje tussen prompt engineering en fine tuning in. We nemen een b
 * Een mogelijkheid hebben om die database met queries te bevragen
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Gebruiker] --> C[Base LLM]
     B[Vector database] <.-> C[Base LLM]
     E[PDF] --> B[Vector database]
@@ -146,14 +146,14 @@ Nu we weten dat we termen proberen te vatten in een vector (diens nummerieke rep
 |3|Verlengen parkeervergunning|
 |4|Bezwaar maken tegen afwijzing|
 
-Iedere chunk krijgt zijn eigen embedding. Hierdoor kkunnen we veel gerichter zoeken. Als iemand vraagt naar de kosten van een parkeervergunning, kunnen we specifiek de chunk over de kosten terugvinden. Het zoeken op betekenis heet semantisch zoeken.
+Iedere chunk krijgt zijn eigen embedding. Hierdoor kunnen we veel gerichter zoeken. Als iemand vraagt naar de kosten van een parkeervergunning, kunnen we specifiek de chunk over de kosten terugvinden. Het zoeken op betekenis heet semantisch zoeken.
 
 #### Flowchart
 
 Als we bovenstaande samen zouden vatten in een flowchart, ziet deze er als volgt uit:
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Data pdf word websites] --> B[Chunk 1]
     A[Data pdf word websites] --> C[Chunk 2]
     A[Data pdf word websites] --> D[Chunk 3]
@@ -163,4 +163,85 @@ flowchart TD
     E[Embedding model 1] --> H[Vector database]
     F[Embedding model 2] --> H[Vector database]
     G[Embedding model 3] --> H[Vector database]
+```
+
+### Query processing
+
+Nu we de data hebben klaar gemaakt en opgeslagen in de vector database, kunnen we deze database bevragen. Misschien kan je al bedenken dat de gebruikersvraag dan ook omgezet moet worden naar vectoren. We zagen het al eerder in ons voorbeeld om aan te tonen dat het beleidsstuk en de gebruikersvraag dichtbij elkaar lagen in de vectorruimte. We moeten net als bij de brondata, de gebruikersvraag omzetten in vectoren.
+
+Maar de vector database geeft geen direct antwoord. Het enige dat de vector teruggeeft is context. Hij geeft de 'documenten' terug die dichtbij de vraag liggen (in de vectorruimte). De documenten die teruggegeven worden, heten de retrieved results. Deze geven context.
+
+```mermaid
+flowchart LR
+    A[I/P Query] --> B[Embeddingmodel]
+    B[Embeddingmodel] --> C[Vector database]
+    C --> D[Doc 1]
+    C --> E[Doc 2]
+    C --> F[Doc 3]
+```
+
+Het teruggeven van de documenten heet retreival.
+
+### Generation
+
+De generation fase is relatief simpel in verhouding met eerdere fases. In deze stap. We hebben via de query processing 3 documenten gekregen die dichtbij de gebruikersvraag lagen.
+
+Nu we de context hebben moeten we deze verrijken (augmentation). Hier komt de gebruikersvraag er bijvoorbeeld weer bij. Dus: De oorspronkelijke vraag is nu verrijkt met relevante informatie uit de vectordatabase. Dit is augmentation. Nu we de informatie hebben, kunnen we deze nogmaals verrijken. Dit doen we met meta-data. De informatie komt uit document 1, 2 en 3 maar we hebben ook nog metadata van het document. Bijvoorbeeld:
+
+```json
+{
+  "content": "Een bewoner kan een aanvraag voor een vergunning doen via het omgevingsloket van de gemeente.",
+  "metadata": {
+    "document_name": "Procedure parkeervergunning",
+    "document_type": "Beleidsstuk",
+    "department": "VTH",
+    "version": "2.1",
+    "publication_date": "2026-01-01",
+    "source": "VTH-handboek"
+  }
+}
+```
+Dus met deze metadata kunnen we de gebruiker meer informatie geven bij het geven van een antwoord (enrichment). We weten nu de inhoud, de vraag en waar de inhoud vandaan komt. Dit ziet er als volgt uit:
+
+```mermaid
+flowchart LR
+    A[Doc 1] --> D[Augmentation]
+    B[Doc 2] --> D[Augmentation]
+    C[Doc 3] --> D[Augmentation]
+    D --> E[Enrichment context]
+    E --> F[Basis LLM]
+    F --> G[Samengevatte output]
+```
+
+Dus als we dan naar een voorbeeld van de vraag en het antwoord kijken zie je ongeveer het volgende:
+
+```text
+Je bent een assistent van een overheidsorganisatie.
+
+Beantwoord de vraag van de gebruiker uitsluitend
+op basis van de onderstaande context.
+
+GEBRUIKERSVRAAG:
+Hoe kan ik mijn auto in mijn wijk parkeren zonder steeds te betalen?
+
+CONTEXT:
+
+Document 1:
+Naam: Procedure parkeervergunning
+Afdeling: VTH
+Versie: 2.1
+
+Inhoud:
+Een bewoner kan een aanvraag voor een vergunning doen via het omgevingsloket van de gemeente.
+
+Document 2:
+Naam: Voorwaarden parkeervergunning
+Afdeling: VTH
+
+Inhoud:
+Een parkeervergunning is gekoppeld aan een woning. In die woning moet minimaal 1 persoon op het adres ingeschreven zijn.
+
+ANTWOORD:
+Je kan een vergunning aanvragen bij het omgevingsloket van de gemeente. Iemand in jouw huishouden moet wel ingeschreven zijn op een adres in de gemeente. De vergunning is gekoppeld aan de woning.
+
 ```
