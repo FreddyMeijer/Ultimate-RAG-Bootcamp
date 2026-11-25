@@ -1,72 +1,119 @@
 # Ultimate RAG Bootcamp
 
-Nederlandstalige aantekeningen en kleine experimenten bij de Udemy-cursus
-**Ultimate RAG Bootcamp**. Deze repository bevat uitleg over Retrieval-Augmented
-Generation (RAG), instructies voor een lokale AI-omgeving en een Python-script
-dat een lokaal Ollama-model test. Het is een leeromgeving; er staat nog geen
-complete RAG-applicatie in.
+Nederlandstalige aantekeningen en voorbeelden voor het leren werken met
+Retrieval-Augmented Generation (RAG). De repository bevat eerst theorie over
+RAG en aanwijzingen voor het opzetten van een lokale AI-omgeving met Anaconda,
+Ollama, Qwen en Nomic Embed Text.
 
 ## Inhoud
 
 | Bestand | Beschrijving |
 | --- | --- |
-| [rag.md](./rag.md) | Korte introductie tot RAG |
-| [Installatie.md](./Installatie.md) | Linux-installatie van Ollama en de modellen Qwen 2.5 3B en Nomic Embed Text |
-| [Virtuele omgeving.md](./Virtuele%20omgeving.md) | Conda-omgevingen maken, activeren en beheren |
-| [ollama-test.py](./ollama-test.py) | Voorbeeldscript dat een chatbericht naar Ollama stuurt |
+| [1. installatie anaconda.md](./1.%20installatie%20anaconda.md) | Anaconda/Conda installeren en beheren |
+| [2. Installatie Ollama en Qwen.md](./2.%20Installatie%20Ollama%20en%20Qwen.md) | Ollama, Qwen 2.5 3B en Nomic Embed Text lokaal installeren |
+| [theorie.md](./theorie.md) | Uitleg over RAG, embeddings, chunks, retrieval en generation |
+| [ollama_test.py](./ollama_test.py) | Python-voorbeeld dat een bericht via de Ollama API naar Qwen stuurt |
 | [LICENSE](./LICENSE) | GNU General Public License v3.0 |
 
 ## Aan de slag
 
 ### Benodigdheden
 
-- Python 3.11 en Conda, of een andere Python-omgeving.
-- [Ollama](https://ollama.com/) geïnstalleerd en actief.
-- Het model `qwen2.5:3b`.
+- Linux
+- Anaconda of Miniconda
+- Python 3.11
+- Ollama
+- Het Ollama-model `qwen2.5:3b`
+- Voor RAG-experimenten: `nomic-embed-text`
 
-De installatiehandleiding beschrijft de installatie van Ollama op Linux. De
-Conda-instructies zijn bedoeld om de Python-afhankelijkheden in een aparte
-omgeving te houden.
+De gedetailleerde instructies staan in de twee installatiehandleidingen.
 
 ### Python-omgeving instellen
 
-Maak en activeer een Conda-omgeving en installeer de Ollama Python-bibliotheek:
+Maak een aparte Conda-omgeving voor het bootcamp:
 
 ```bash
 conda create --name rag-bootcamp python=3.11
 conda activate rag-bootcamp
+```
+
+Installeer daarna de Python-bibliotheek voor Ollama:
+
+```bash
 python -m pip install ollama
 ```
 
-### Ollama-model klaarzetten
+Zie [1. installatie anaconda.md](./1.%20installatie%20anaconda.md) voor meer
+Conda-opdrachten en voorbeelden.
 
-Installeer Ollama volgens de [installatiehandleiding](./Installatie.md) en
-download het taalmodel:
+### Ollama en de modellen klaarzetten
+
+Installeer Ollama op Linux en controleer de installatie:
 
 ```bash
-ollama pull qwen2.5:3b
+curl -fsSL https://ollama.com/install.sh | sh
+ollama --version
+ollama serve
 ```
 
-### Voorbeeld uitvoeren
+De Ollama-service kan al automatisch draaien na de installatie. Gebruik daarom
+alleen `ollama serve` als je de service handmatig moet starten.
+
+Download of start Qwen:
+
+```bash
+ollama run qwen2.5:3b
+```
+
+Het commando `ollama run` downloadt het model indien nodig en opent een
+interactieve sessie. Typ `/bye` om af te sluiten.
+
+Installeer voor toekomstige RAG-oefeningen ook het embeddingmodel:
+
+```bash
+ollama pull nomic-embed-text
+ollama list
+```
+
+De volledige installatie en een overzicht van de lokale architectuur staan in
+[2. Installatie Ollama en Qwen.md](./2.%20Installatie%20Ollama%20en%20Qwen.md).
+
+### Ollama-test uitvoeren
 
 Voer vanuit de hoofdmap van deze repository het testscript uit:
 
 ```bash
-python ollama-test.py
+python ollama_test.py
 ```
 
 Het script stuurt een korte begroeting naar `qwen2.5:3b` en toont het antwoord
-in de terminal. Zorg dat de Ollama-service actief is.
+in de terminal. Zorg dat de Ollama-service actief is en installeer het model
+vooraf met `ollama pull qwen2.5:3b`.
 
 ## RAG in het kort
 
 RAG staat voor *Retrieval-Augmented Generation*. Een RAG-toepassing haalt
 relevante informatie uit eigen documenten of een kennisbron op en geeft die
 informatie mee aan een taalmodel bij het beantwoorden van een vraag. Zo kan
-het antwoord worden gebaseerd op die bron, naast de kennis die het model
-tijdens de training heeft opgedaan. Lees de [RAG-notities](./rag.md) voor de
-introductie en de [installatiehandleiding](./Installatie.md) voor het
-beschreven model- en architectuuroverzicht.
+een antwoord gebaseerd zijn op de opgegeven bron naast de kennis die het model
+tijdens de training heeft opgedaan.
+
+De kernfasen zijn documentinvoer en verwerking, queryverwerking en generatie.
+De [theorie](./theorie.md) legt uit hoe documenten worden opgesplitst in
+chunks, hoe embeddings en vectorzoeking werken en hoe opgehaalde context wordt
+opgenomen in de prompt.
+
+## Huidige inhoud
+
+Deze repository is een leeromgeving. Op dit moment bevat de repository:
+
+- Nederlandstalige RAG-theorie;
+- installatie-instructies voor Anaconda en Conda;
+- installatie-instructies voor Ollama, Qwen en Nomic Embed Text;
+- één eenvoudig Python-script dat met een lokaal Qwen-model communiceert.
+
+Er is nog geen complete RAG-pipeline of applicatie met een vector database
+opgenomen.
 
 ## Licentie
 
