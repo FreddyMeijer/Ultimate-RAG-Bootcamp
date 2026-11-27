@@ -6,11 +6,23 @@ Nederlandstalige aantekeningen en voorbeelden voor het leren werken met Retrieva
 
 | Bestand | Beschrijving |
 | --- | --- |
-| [theorie.md](theorie.md) | Uitleg over RAG, chunks, embeddings, vectorzoeking, queryverwerking en generatie |
-| [1. installatie anaconda.md](1.%20installatie%20anaconda.md) | Anaconda/Conda installeren en beheren op Linux |
-| [2. Installatie Ollama en Qwen.md](2.%20Installatie%20Ollama%20en%20Qwen.md) | Ollama, `qwen2.5:3b` en `nomic-embed-text` lokaal installeren |
-| [ollama_test.py](ollama_test.py) | Python-script dat via de Ollama-bibliotheek een bericht naar `qwen2.5:3b` stuurt |
+| [notes/1-installatie-anaconda.md](notes/1-installatie-anaconda.md) | Anaconda/Conda installeren en beheren op Linux |
+| [notes/2-installatie-ollama-en-qwen.md](notes/2-installatie-ollama-en-qwen.md) | Ollama, `qwen2.5:3b` en `nomic-embed-text` lokaal installeren |
+| [notes/3-rag-theorie.md](notes/3-rag-theorie.md) | Uitleg over RAG, prompt engineering en fine-tuning |
+| [src/ollama-test.py](src/ollama-test.py) | Python-script dat via de Ollama-bibliotheek een bericht naar `qwen2.5:3b` stuurt |
 | [LICENSE](LICENSE) | GNU General Public License v3.0 |
+
+## Projectstructuur
+
+```text
+├── data/
+├── notes/
+│   ├── 1-installatie-anaconda.md
+│   ├── 2-installatie-ollama-en-qwen.md
+│   └── 3-rag-theorie.md
+└── src/
+    └── ollama-test.py
+```
 
 ## Aan de slag
 
@@ -23,12 +35,35 @@ Nederlandstalige aantekeningen en voorbeelden voor het leren werken met Retrieva
 * Het taalmodel `qwen2.5:3b`
 * Het embeddingmodel `nomic-embed-text` (voor RAG-experimenten)
 
-Uitgebreide instructies vind je in [1. installatie anaconda.md](1.%20installatie%20anaconda.md) en [2. Installatie Ollama en Qwen.md](2.%20Installatie%20Ollama%20en%20Qwen.md).
+Uitgebreide instructies vind je in [notes/1-installatie-anaconda.md](notes/1-installatie-anaconda.md) en [notes/2-installatie-ollama-en-qwen.md](notes/2-installatie-ollama-en-qwen.md).
 
 ### 1. Python-omgeving instellen
 
-Maak een aparte Conda-omgeving voor het bootcamp:
+Maak een aparte Conda-omgeving en installeer de Ollama-Python-bibliotheek:
 
 ```bash
 conda create --name rag-bootcamp python=3.11
 conda activate rag-bootcamp
+pip install ollama
+```
+
+### 2. Ollama en modellen instellen
+
+Installeer Ollama met de [handleiding voor de lokale AI-omgeving](notes/2-installatie-ollama-en-qwen.md) en zorg dat de Ollama-service actief is. Download daarna de modellen:
+
+```bash
+ollama pull qwen2.5:3b
+ollama pull nomic-embed-text
+```
+
+`qwen2.5:3b` is nodig voor het voorbeeldscript. `nomic-embed-text` is bedoeld voor RAG-experimenten.
+
+### 3. Voorbeeldscript uitvoeren
+
+Voer vanuit de hoofdmap van de repository het script uit:
+
+```bash
+python src/ollama-test.py
+```
+
+Het script stuurt een bericht naar `qwen2.5:3b` en toont het antwoord in de terminal.
