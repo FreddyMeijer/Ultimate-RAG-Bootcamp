@@ -6,6 +6,7 @@ Nederlandstalige aantekeningen en voorbeelden voor het leren werken met Retrieva
 
 | Bestand | Beschrijving |
 | --- | --- |
+| [requirements.txt](requirements.txt) | Python-afhankelijkheden voor de RAG-experimenten |
 | [notes/1-installatie-anaconda.md](notes/1-installatie-anaconda.md) | Anaconda/Conda installeren en beheren op Linux |
 | [notes/2-installatie-ollama-en-qwen.md](notes/2-installatie-ollama-en-qwen.md) | Ollama, `qwen2.5:3b` en `nomic-embed-text` lokaal installeren |
 | [notes/3-rag-theorie.md](notes/3-rag-theorie.md) | Uitleg over RAG, prompt engineering en fine-tuning |
@@ -16,6 +17,10 @@ Nederlandstalige aantekeningen en voorbeelden voor het leren werken met Retrieva
 
 ```text
 ├── data/
+├── LICENSE
+├── .gitignore
+├── README.md
+├── requirements.txt
 ├── notes/
 │   ├── 1-installatie-anaconda.md
 │   ├── 2-installatie-ollama-en-qwen.md
@@ -39,13 +44,16 @@ Uitgebreide instructies vind je in [notes/1-installatie-anaconda.md](notes/1-ins
 
 ### 1. Python-omgeving instellen
 
-Maak een aparte Conda-omgeving en installeer de Ollama-Python-bibliotheek:
+Maak een aparte Conda-omgeving en installeer de Python-afhankelijkheden vanuit de hoofdmap van de repository:
 
 ```bash
 conda create --name rag-bootcamp python=3.11
 conda activate rag-bootcamp
+pip install -r requirements.txt
 pip install ollama
 ```
+
+Met `pip install -r requirements.txt` installeer je alle pakketten die in `requirements.txt` staan. De Ollama-Python-bibliotheek installeer je apart, omdat die niet in dat bestand is opgenomen.
 
 ### 2. Ollama en modellen instellen
 
