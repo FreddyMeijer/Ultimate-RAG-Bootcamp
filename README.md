@@ -1,6 +1,6 @@
 # Ultimate RAG Bootcamp
 
-Nederlandstalige aantekeningen en voorbeelden voor het leren werken met Retrieval-Augmented Generation (RAG) op basis van de Udemy-cursus *Ultimate RAG Bootcamp*. De repository bevat theorie over RAG en handleidingen voor het opzetten van een lokale AI-omgeving met Anaconda, Ollama, Qwen en Nomic Embed Text.
+Nederlandstalige aantekeningen en voorbeelden voor het leren werken met Retrieval-Augmented Generation (RAG) op basis van de Udemy-cursus *Ultimate RAG Bootcamp*. De repository bevat theorie over RAG, handleidingen voor het opzetten van een lokale AI-omgeving met Anaconda, Ollama, Qwen en Nomic Embed Text, en een notebook als startpunt voor data-ingestion.
 
 ## Inhoud
 
@@ -10,6 +10,7 @@ Nederlandstalige aantekeningen en voorbeelden voor het leren werken met Retrieva
 | [notes/1-installatie-anaconda.md](notes/1-installatie-anaconda.md) | Anaconda/Conda installeren en beheren op Linux |
 | [notes/2-installatie-ollama-en-qwen.md](notes/2-installatie-ollama-en-qwen.md) | Ollama, `qwen2.5:3b` en `nomic-embed-text` lokaal installeren |
 | [notes/3-rag-theorie.md](notes/3-rag-theorie.md) | Uitleg over RAG, prompt engineering en fine-tuning |
+| [notes/4-data-ingestion.ipynb](notes/4-data-ingestion.ipynb) | Startpunt voor experimenten met data-ingestion in Jupyter Notebook |
 | [src/ollama-test.py](src/ollama-test.py) | Python-script dat via de Ollama-bibliotheek een bericht naar `qwen2.5:3b` stuurt |
 | [LICENSE](LICENSE) | GNU General Public License v3.0 |
 
@@ -24,7 +25,8 @@ Nederlandstalige aantekeningen en voorbeelden voor het leren werken met Retrieva
 ├── notes/
 │   ├── 1-installatie-anaconda.md
 │   ├── 2-installatie-ollama-en-qwen.md
-│   └── 3-rag-theorie.md
+│   ├── 3-rag-theorie.md
+│   └── 4-data-ingestion.ipynb
 └── src/
     └── ollama-test.py
 ```
@@ -51,9 +53,11 @@ conda create --name rag-bootcamp python=3.11
 conda activate rag-bootcamp
 pip install -r requirements.txt
 pip install ollama
+conda install jupyter
 ```
 
 Met `pip install -r requirements.txt` installeer je alle pakketten die in `requirements.txt` staan. De Ollama-Python-bibliotheek installeer je apart, omdat die niet in dat bestand is opgenomen.
+Jupyter installeer je in dezelfde actieve omgeving, zodat het notebook de Python-omgeving met de projectafhankelijkheden gebruikt.
 
 ### 2. Ollama en modellen instellen
 
@@ -75,3 +79,13 @@ python src/ollama-test.py
 ```
 
 Het script stuurt een bericht naar `qwen2.5:3b` en toont het antwoord in de terminal.
+
+### 4. Data-ingestion notebook openen
+
+Start Jupyter Notebook vanuit de hoofdmap van de repository:
+
+```bash
+jupyter notebook
+```
+
+Open in de Jupyter-interface `notes/4-data-ingestion.ipynb`. Dit notebook is het startpunt voor de data-ingestion-experimenten en wordt verder uitgewerkt.

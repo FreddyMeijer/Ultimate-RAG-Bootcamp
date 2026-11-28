@@ -5,9 +5,11 @@
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
 
 ## Waarom Anaconda?
+
 Met Anaconda (Conda) kun je verschillende Python-omgevingen aanmaken en beheren.
 
 Een omgeving bevat een eigen:
+
 - Python-versie.
 - Geïnstalleerde Python-packages.
 - Afhankelijkheden (dependencies).
@@ -17,6 +19,7 @@ Dit is vooral handig wanneer je met verschillende projecten werkt. Zo voorkom je
 **Voorbeeld:** Voor het Ultimate RAG Bootcamp gebruik je een aparte omgeving met Python, LangChain, LangGraph en andere AI-libraries.
 
 ## Anaconda downloaden
+
 Open de terminal in `sudo` modus en typ:
 
 ```bash
@@ -24,6 +27,7 @@ cd ~/Downloads
 curl -O https://repo.anaconda.com/archive/Anaconda3-2026.07-1-Linux-x86_64.sh
 bash Anaconda3-2026.07-1-Linux-x86_64.sh
 ```
+
 Volg de aanwijzingen en beantwoord de vragen.
 
 Als de installatie voltooid is kan je controleren of de installatie voltooid is met `conda info`:
@@ -81,7 +85,7 @@ conda create --name rag-bootcamp python=3.11
 Uitleg:
 
 | Onderdeel | Betekenis |
-|---|---|
+| --- | --- |
 | `conda create` | Maakt een nieuwe omgeving aan |
 | `--name` | Geeft de omgeving een naam |
 | `rag-bootcamp` | Naam van de omgeving |
@@ -184,7 +188,7 @@ Hiermee worden de omgeving en de daarin geïnstalleerde packages verwijderd.
 ## Overzicht van belangrijke Conda-commando's
 
 | Commando | Functie |
-|---|---|
+| --- | --- |
 | `conda create -n naam python=3.11` | Nieuwe omgeving aanmaken |
 | `conda activate naam` | Omgeving activeren |
 | `conda deactivate` | Omgeving deactiveren |
@@ -223,6 +227,17 @@ conda env create -f environment.yml
 Dit is handig wanneer je jouw RAG-project op een andere computer wilt voortzetten.
 
 ---
+
+## Jupyter notebook installeren
+
+Om Jupyter notebook te installeren open je jouw anaconda omgeving en voeg je jupyter toe:
+
+```bash
+(base) freddy-meijer@freddy-meijer-Legion-5-17ITH6H:~/Downloads/Ultimate-RAG-Bootcamp$  conda activate rag-bootcamp
+(rag-bootcamp) freddy-meijer@freddy-meijer-Legion-5-17ITH6H:~/Downloads/Ultimate-RAG-Bootcamp$ conda install jupyter 
+```
+
+Jupyter zal zo geinstalleerd worden
 
 ## Samenvatting
 
